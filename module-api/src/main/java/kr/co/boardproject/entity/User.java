@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import kr.co.boardproject.controller.UserReqDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,10 +21,4 @@ public class User {
     private String userEmail;
     private String userName;
     private String userPassword;
-
-    public User(UserReqDto userReqDto,String encode) {
-        this.userEmail = userReqDto.getUserEmail();
-        this.userName = userReqDto.getUserName();
-        this.userPassword = encode;
-    }
 }
