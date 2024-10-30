@@ -1,0 +1,22 @@
+#로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "newy123",
+  "password": "dudwo1234"
+}
+
+> {% client.global.set("access_token", response.body.token); %}
+
+###
+
+#회원가입
+GET http://localhost:8080/test
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+
+
+
