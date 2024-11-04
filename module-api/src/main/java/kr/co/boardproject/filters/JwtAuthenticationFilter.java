@@ -4,6 +4,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.boardproject.exception.ApiException;
+import kr.co.boardproject.repository.BlackListTokenRepository;
 import kr.co.boardproject.service.CustomUserDetailsService;
 import kr.co.boardproject.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenUtil jwtTokenUtil;
     private final CustomUserDetailsService userDetailsService;
+    private final BlackListTokenRepository blackListTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -29,15 +32,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
         String token = null;
-        String username = null;
+        String userEmail = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
-            username = jwtTokenUtil.validateTokenAndGetUsername(token);
+
+            //블랙리스트 토큰 확인
+            if(blackListTokenRepository.existsByAccessToken(token)){
+                throw new ApiException(401, "블랙리스트에 들어있는 토큰입니다.");
+            }
+            userEmail = jwtTokenUtil.validateTokenAndGetUserEmail(token);
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
             if (userDetails != null) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(

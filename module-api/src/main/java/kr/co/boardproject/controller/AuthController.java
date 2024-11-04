@@ -1,33 +1,35 @@
 package kr.co.boardproject.controller;
 
-import kr.co.boardproject.dto.AuthRequestDto;
-import kr.co.boardproject.dto.AuthResponseDto;
-import kr.co.boardproject.utils.JwtTokenUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import kr.co.boardproject.auth.CustomUserDetails;
+import kr.co.boardproject.dto.auth.AuthRequestDto;
+import kr.co.boardproject.dto.user.TokenResDto;
+import kr.co.boardproject.handler.ApiResponse;
+import kr.co.boardproject.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequestDto authRequestDto) {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequestDto.getUsername(), authRequestDto.getPassword())
-            );
-
-            String token = jwtTokenUtil.generateAccessToken(authRequestDto.getUsername());
-            return ResponseEntity.ok(new AuthResponseDto(token));
-
+    public ResponseEntity<TokenResDto> login(@RequestBody AuthRequestDto authRequestDto) throws Exception {
+        return ResponseEntity.ok(authService.loginProcess(authRequestDto));
     }
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
+        authService.logoutProcess(request,customUserDetails);
+        return ResponseEntity.ok(ApiResponse.success());
+    }
+    /*@PostMapping("/refresh")
+    public ResponseEntity<?> giveNewAccessToken(HttpServletRequest request) {
+        return ResponseEntity.ok(authService.giveNewAccessToken(request));
+    }*/
+
+
 }

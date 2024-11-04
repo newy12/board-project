@@ -4,4 +4,5 @@ include 'module-api'
 include 'module-api'
 include 'module-api'
 include 'module-api'
+include 'module-redis'
 

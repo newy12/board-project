@@ -11,13 +11,15 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
     private String userEmail;
     private String username;
+    private String userNickname;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, String userEmail, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(String username, String password, String userEmail, String userNickname, Collection<? extends GrantedAuthority> authorities) {
         this.username = username;
         this.password = password;
-        this.userEmail = userEmail; // userId 초기화
+        this.userEmail = userEmail;
+        this.userNickname = userNickname;
         this.authorities = authorities;
     }
 

@@ -23,9 +23,9 @@ public class JwtTokenUtil {
     private long refreshExpirationTime;
 
     // 액세스 토큰 생성
-    public String generateAccessToken(String username) {
+    public String generateAccessToken(String userEmail) {
         return JWT.create()
-                .withSubject(username)
+                .withSubject(userEmail)
                 .withExpiresAt(new Date(System.currentTimeMillis() + accessExpirationTime))
                 .sign(Algorithm.HMAC256(secretKey));
     }
@@ -39,7 +39,7 @@ public class JwtTokenUtil {
     }
 
     // 토큰 검증 및 사용자 이름 반환
-    public String validateTokenAndGetUsername(String token) {
+    public String validateTokenAndGetUserEmail(String token) {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretKey)).build();
             DecodedJWT decodedJWT = verifier.verify(token);
