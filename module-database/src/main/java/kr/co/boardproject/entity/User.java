@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import kr.co.boardproject.dto.user.JoinUserReqDto;
-import kr.co.boardproject.entity.common.BaseEntity;
 import kr.co.boardproject.entity.common.OnlyDateBaseEntity;
 import kr.co.boardproject.utils.AES256Cipher;
 import lombok.AccessLevel;
