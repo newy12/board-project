@@ -1,13 +1,11 @@
-package kr.co.boardproject.dto.user;
+package kr.co.boardproject.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class TokenResDto {
+public class NewAccessTokenResDto {
     private String accessToken;
     private Long refreshTokenId;
 }

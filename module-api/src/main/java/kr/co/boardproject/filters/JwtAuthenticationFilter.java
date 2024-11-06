@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
-
             //블랙리스트 토큰 확인
             if(blackListTokenRepository.existsByAccessToken(token)){
                 throw new ApiException(401, "블랙리스트에 들어있는 토큰입니다.");

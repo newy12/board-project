@@ -26,10 +26,8 @@ public class AuthController {
         authService.logoutProcess(request,customUserDetails);
         return ResponseEntity.ok(ApiResponse.success());
     }
-    /*@PostMapping("/refresh")
-    public ResponseEntity<?> giveNewAccessToken(HttpServletRequest request) {
+    @PostMapping("/refresh")
+    public ResponseEntity<TokenResDto> giveNewAccessToken(HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(authService.giveNewAccessToken(request));
-    }*/
-
-
+    }
 }

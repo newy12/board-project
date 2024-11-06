@@ -2,6 +2,7 @@ package kr.co.boardproject.entity;
 
 import jakarta.persistence.*;
 import kr.co.boardproject.entity.common.BaseEntity;
+import kr.co.boardproject.entity.common.OnlyDateBaseEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,13 +12,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class RefreshToken extends BaseEntity {
+public class RefreshToken extends OnlyDateBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long refreshTokenId;
     private String token;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -2,6 +2,7 @@ package kr.co.boardproject.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kr.co.boardproject.auth.CustomUserDetails;
+import kr.co.boardproject.dto.auth.NewAccessTokenResDto;
 import kr.co.boardproject.dto.auth.AuthRequestDto;
 import kr.co.boardproject.dto.user.TokenResDto;
 import kr.co.boardproject.entity.BlackListToken;
@@ -70,15 +71,34 @@ public class AuthService {
     }
 
     @Transactional
-    public void giveNewAccessToken(HttpServletRequest request) {
+    public TokenResDto giveNewAccessToken(HttpServletRequest request) throws Exception {
         String authorizationHeader = request.getHeader("Authorization");
+        String refreshTokenId = request.getHeader("Refresh-Token-Id");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             // Bearer 토큰 부분만 추출
             String accessToken = authorizationHeader.substring(7);
-            if(jwtTokenUtil.validateTokenAndGetUserEmail(accessToken) != null){
-                throw new ApiException(400, "토큰이 아직 유효하지 않습니다.");
+            if (jwtTokenUtil.validateTokenAndGetUserEmail(accessToken) != null) {
+                throw new ApiException(400, "토큰이 아직 유효합니다.");
+            } else {
+                RefreshToken rtInfo = refreshTokenRepository.findById(Long.valueOf(refreshTokenId))
+                        .orElseThrow(() -> new ApiException(400, "리프레시 토큰 정보가 존재하지 않습니다."));
+
+                if (jwtTokenUtil.validateTokenAndGetUserEmail(rtInfo.getToken()) != null) {
+
+                    String newAccessToken = jwtTokenUtil.generateAccessToken(AES256Cipher.decrypt(rtInfo.getUser().getUserEmail()));
+                    String newRefreshToken = jwtTokenUtil.generateRefreshToken(AES256Cipher.decrypt(rtInfo.getUser().getUserEmail()));
+
+                    //새로 갱신한 refresh token으로 업데이트
+                    rtInfo.updateToken(newRefreshToken);
+                    return new TokenResDto(newAccessToken,rtInfo.getRefreshTokenId());
+                } else {
+                    throw new ApiException(400, "리프레시 토큰이 유효하지 않습니다.");
+                }
             }
+        } else {
+            throw new ApiException(400, "토큰이 존재하지 않습니다.");
         }
+
     }
 }
