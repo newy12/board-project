@@ -8,6 +8,5 @@ import java.util.Optional;
 public interface BlackListTokenRepository extends CrudRepository<BlackListToken, String> {
     boolean existsByAccessToken(String accessToken);
 
-
     Optional<BlackListToken> findByUserEmail(String decrypt);
 }

@@ -1,10 +1,8 @@
 rootProject.name = 'board-project'
 include 'module-database'
-include 'module-api'
-include ':module-api:module-user'
 include 'module-redis'
 include 'module-eureka'
 include 'module-gateway'
-
-
+include 'module-api:module-auth'
+include ':module-api:module-user'
 

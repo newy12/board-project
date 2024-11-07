@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
-    private final AuthenticationManager authenticationManager;
+    //private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
@@ -33,7 +33,7 @@ public class AuthService {
 
     @Transactional
     public TokenResDto loginProcess(AuthRequestDto authRequestDto) throws Exception {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUserEmail(), authRequestDto.getUserPassword()));
+        //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUserEmail(), authRequestDto.getUserPassword()));
 
         //엑세스 토큰 생성
         String accessToken = jwtTokenUtil.generateAccessToken(authRequestDto.getUserEmail());
@@ -54,11 +54,12 @@ public class AuthService {
         }
     }
 
-    @Transactional
+    /*@Transactional
     public void logoutProcess(HttpServletRequest request, CustomUserDetails customUserDetails) throws Exception {
         //해당 유저의 과거 블랙리스트에 들어있는 토큰 제거
         blackListTokenRepository.findByUserEmail(AES256Cipher.decrypt(customUserDetails.getUserEmail()))
                 .ifPresent(blackListInfo -> blackListTokenRepository.deleteById(blackListInfo.getId()));
+
         String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -68,7 +69,7 @@ public class AuthService {
         } else {
             throw new ApiException(400, "로그아웃에 실패했습니다.");
         }
-    }
+    }*/
 
     @Transactional
     public TokenResDto giveNewAccessToken(HttpServletRequest request) throws Exception {

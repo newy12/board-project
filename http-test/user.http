@@ -1,5 +1,5 @@
 #로그인
-POST http://localhost:8080/auth/login
+POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Accept: application/json
 ###
 
 #로그아웃
-POST http://localhost:8080/auth/logout
+POST http://localhost:8080/api/v1/user/logout
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 Accept: application/json
@@ -51,7 +51,7 @@ Accept: application/json
 
 ###
 #토큰 재발급
-POST http://localhost:8080/auth/refresh
+POST http://localhost:8080/api/v1/auth/refresh
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
 refresh-token-id: {{refresh_token_id}}

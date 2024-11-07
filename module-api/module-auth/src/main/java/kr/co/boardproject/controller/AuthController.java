@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -21,13 +21,18 @@ public class AuthController {
     public ResponseEntity<TokenResDto> login(@RequestBody AuthRequestDto authRequestDto) throws Exception {
         return ResponseEntity.ok(authService.loginProcess(authRequestDto));
     }
-    @PostMapping("/logout")
+/*    @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
         authService.logoutProcess(request,customUserDetails);
         return ResponseEntity.ok(ApiResponse.success());
-    }
+    }*/
     @PostMapping("/refresh")
     public ResponseEntity<TokenResDto> giveNewAccessToken(HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(authService.giveNewAccessToken(request));
+    }
+
+    @GetMapping("/test")
+    public String get(){
+        return "test complete  !!!";
     }
 }
