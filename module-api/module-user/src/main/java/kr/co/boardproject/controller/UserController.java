@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/test")
-    public void get(){
-        System.out.println("gateway 통과 !!");
+    public String get(){
+        return "auth -> user";
     }
 }

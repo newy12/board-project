@@ -9,6 +9,7 @@ import kr.co.boardproject.entity.BlackListToken;
 import kr.co.boardproject.entity.RefreshToken;
 import kr.co.boardproject.entity.User;
 import kr.co.boardproject.exception.ApiException;
+import kr.co.boardproject.feign.BoardUserApiFeignClient;
 import kr.co.boardproject.repository.BlackListTokenRepository;
 import kr.co.boardproject.repository.RefreshTokenRepository;
 import kr.co.boardproject.repository.UserRepository;
@@ -30,6 +31,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final BlackListTokenRepository blackListTokenRepository;
+    private final BoardUserApiFeignClient boardUserApiFeignClient;
 
     @Transactional
     public TokenResDto loginProcess(AuthRequestDto authRequestDto) throws Exception {
@@ -101,5 +103,9 @@ public class AuthService {
             throw new ApiException(400, "토큰이 존재하지 않습니다.");
         }
 
+    }
+
+    public String test() {
+        return boardUserApiFeignClient.getTest();
     }
 }

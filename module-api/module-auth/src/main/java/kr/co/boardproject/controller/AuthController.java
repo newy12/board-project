@@ -33,6 +33,6 @@ public class AuthController {
 
     @GetMapping("/test")
     public String get(){
-        return "test complete  !!!";
+        return authService.test();
     }
 }
