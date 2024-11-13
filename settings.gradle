@@ -3,6 +3,8 @@ include 'module-database'
 include 'module-redis'
 include 'module-eureka'
 include 'module-gateway'
+include 'module-config-server'
 include 'module-api:module-auth'
 include ':module-api:module-user'
+
 

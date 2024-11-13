@@ -89,6 +89,16 @@ project(':module-database') {
     }
 }
 
+project(':module-config-server') {
+    bootJar { enabled = false }
+    jar { enabled = true }
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.cloud:spring-cloud-config-server'
+        implementation 'org.springframework.cloud:spring-cloud-vault-config'
+    }
+}
+
 project(':module-redis') {
     bootJar { enabled = false }
     jar { enabled = true }
@@ -141,6 +151,8 @@ project(':module-api:module-auth') {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-security'
-        implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
     }
 }
