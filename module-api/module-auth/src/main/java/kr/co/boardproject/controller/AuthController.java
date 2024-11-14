@@ -24,19 +24,14 @@ public class AuthController {
     public ResponseEntity<TokenResDto> login(@RequestBody AuthRequestDto authRequestDto) throws Exception {
         return ResponseEntity.ok(authService.loginProcess(authRequestDto));
     }
-/*    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal CustomUserDetails customUserDetails) throws Exception {
-        authService.logoutProcess(request,customUserDetails);
-        return ResponseEntity.ok(ApiResponse.success());
-    }*/
+
     @PostMapping("/refresh")
     public ResponseEntity<TokenResDto> giveNewAccessToken(HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(authService.giveNewAccessToken(request));
     }
 
     @GetMapping("/test")
-    public void get(){
-        System.out.println("test = " + test);
-        //return authService.test();
+    public ResponseEntity<?> get(){
+        return ResponseEntity.ok(authService.test());
     }
 }

@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,25 +27,23 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthService {
-    //private final AuthenticationManager authenticationManager;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
-    private final BlackListTokenRepository blackListTokenRepository;
     private final BoardUserApiFeignClient boardUserApiFeignClient;
+
 
     @Transactional
     public TokenResDto loginProcess(AuthRequestDto authRequestDto) throws Exception {
         //authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDto.getUserEmail(), authRequestDto.getUserPassword()));
+        //기존 정보가 있다면 리프레시 토큰 업데이트
+        User user = userRepository.findByUserEmail(AES256Cipher.encrypt(authRequestDto.getUserEmail()))
+                .orElseThrow(() -> new ApiException(500, "사용자 정보가 일치하지 않습니다."));
 
         //엑세스 토큰 생성
         String accessToken = jwtTokenUtil.generateAccessToken(authRequestDto.getUserEmail());
         //리프레시 토큰 생성
         String refreshToken = jwtTokenUtil.generateRefreshToken(authRequestDto.getUserEmail());
-
-        //기존 정보가 있다면 리프레시 토큰 업데이트
-        User user = userRepository.findByUserEmail(AES256Cipher.encrypt(authRequestDto.getUserEmail()))
-                .orElseThrow(() -> new ApiException(500, "사용자 정보가 존재하지 않습니다."));
 
         RefreshToken refreshTokenByUser = refreshTokenRepository.findByUser(user).orElse(null);
         if (refreshTokenByUser != null) {
@@ -55,23 +54,6 @@ public class AuthService {
             return new TokenResDto(accessToken, refreshTokenInfo.getRefreshTokenId());
         }
     }
-
-    /*@Transactional
-    public void logoutProcess(HttpServletRequest request, CustomUserDetails customUserDetails) throws Exception {
-        //해당 유저의 과거 블랙리스트에 들어있는 토큰 제거
-        blackListTokenRepository.findByUserEmail(AES256Cipher.decrypt(customUserDetails.getUserEmail()))
-                .ifPresent(blackListInfo -> blackListTokenRepository.deleteById(blackListInfo.getId()));
-
-        String authorizationHeader = request.getHeader("Authorization");
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            // Bearer 토큰 부분만 추출
-            String accessToken = authorizationHeader.substring(7); // "Bearer " 부분을 제거
-            blackListTokenRepository.save(new BlackListToken(accessToken, AES256Cipher.decrypt(customUserDetails.getUserEmail())));
-        } else {
-            throw new ApiException(400, "로그아웃에 실패했습니다.");
-        }
-    }*/
 
     @Transactional
     public TokenResDto giveNewAccessToken(HttpServletRequest request) throws Exception {

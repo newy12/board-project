@@ -122,9 +122,10 @@ project(':module-gateway') {
     jar { enabled = true }
     dependencies {
         implementation project(':module-redis')
-        implementation("org.springframework.cloud:spring-cloud-starter-gateway")
-        implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
+        implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
+        implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.6.0'
     }
 }
 
@@ -140,6 +141,8 @@ project(':module-api:module-user') {
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
+
     }
 }
 
@@ -155,5 +158,7 @@ project(':module-api:module-auth') {
         implementation 'org.springframework.boot:spring-boot-starter-security'
         implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
         implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
+
     }
 }

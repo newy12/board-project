@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class JwtAuthFilterFactory extends AbstractGatewayFilterFactory<JwtAuthFilterFactory.Config> {
 
     @Autowired
-    private  BlackListTokenRepository blackListTokenRepository;
+    private BlackListTokenRepository blackListTokenRepository;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -31,7 +31,7 @@ public class JwtAuthFilterFactory extends AbstractGatewayFilterFactory<JwtAuthFi
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             String path = exchange.getRequest().getURI().getPath();
-            if (path.endsWith("/join")) {
+            if (path.matches(".*/v3/api-docs.*") || path.endsWith("/join")) {
                 return chain.filter(exchange);
             }
 
@@ -44,7 +44,7 @@ public class JwtAuthFilterFactory extends AbstractGatewayFilterFactory<JwtAuthFi
 
             String token = authHeader.substring(7);
             try {
-                if(blackListTokenRepository.existsByAccessToken(token)) {
+                if (blackListTokenRepository.existsByAccessToken(token)) {
                     throw new Exception("블랙리스트에 들어있는 토큰입니다.");
                 }
                 jwtTokenUtil.validateTokenAndGetUserEmail(token);
